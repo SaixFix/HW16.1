@@ -4,7 +4,7 @@ from app.users.dao.user import User
 
 class UserDAO:
 
-    def __int__(self, path):
+    def __init__(self, path):
         self.path = path
 
     def load_data(self):
@@ -27,5 +27,4 @@ class UserDAO:
                               )
             list_users.append(user["id"])
 
-
-
+        return list_users
