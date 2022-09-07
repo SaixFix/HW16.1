@@ -1,5 +1,3 @@
-import json
-
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from utils import load_users, load_offers, load_orders
@@ -101,6 +99,7 @@ db.session.commit()
 
 @app.route('/users')
 def get_all_users():
+    """Выводим всех юзеров"""
     users_list = User.query.all()
 
     user_response = []
@@ -120,6 +119,7 @@ def get_all_users():
 
 @app.route('/users/<int:id>')
 def get_chose_user(id):
+    """Выводим юзера по номеру"""
     user = User.query.get(id)
     user_spec = {
         "id": user.id,
@@ -133,8 +133,31 @@ def get_chose_user(id):
     return jsonify(user_spec)
 
 
+@app.route('/orders')
+def get_all_orders():
+    """Выводим все заказы"""
+    orders_list = Order.query.all()
+
+    order_response = []
+
+    for order in orders_list:
+        order_response.append({
+        "id": order.id,
+        "name": order.name,
+        "description": order.description,
+        "start_date": order.start_date,
+        "end_date": order.end_date,
+        "address": order.address,
+        "price": order.price,
+        "customer_id": order.customer_id,
+        "executor_id": order.executor_id
+    })
+    return jsonify(order_response)
+
+
 @app.route('/orders/<int:id>')
 def get_chose_order(id):
+    """Выводим заказ по номеру"""
     order = Order.query.get(id)
     order_spec = {
         "id": order.id,
