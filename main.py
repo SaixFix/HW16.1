@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from utils import load_users, load_offers, load_orders
 
@@ -142,16 +142,16 @@ def get_all_orders():
 
     for order in orders_list:
         order_response.append({
-        "id": order.id,
-        "name": order.name,
-        "description": order.description,
-        "start_date": order.start_date,
-        "end_date": order.end_date,
-        "address": order.address,
-        "price": order.price,
-        "customer_id": order.customer_id,
-        "executor_id": order.executor_id
-    })
+            "id": order.id,
+            "name": order.name,
+            "description": order.description,
+            "start_date": order.start_date,
+            "end_date": order.end_date,
+            "address": order.address,
+            "price": order.price,
+            "customer_id": order.customer_id,
+            "executor_id": order.executor_id
+        })
     return jsonify(order_response)
 
 
@@ -171,6 +171,30 @@ def get_chose_order(id):
         "executor_id": order.executor_id
     }
     return jsonify(order_spec)
+
+
+@app.route('/orders', methods=["POST"])
+def add_user():
+    """Создаем пользователя"""
+    first_name = request.args['first_name']
+    last_name = request.args['last_name']
+    age = request.args['age']
+    email = request.args['email']
+    role = request.args['role']
+    phone = request.args['phone']
+
+    user_new = User(firs_name=first_name,
+                    last_name=last_name,
+                    age=age,
+                    email=email,
+                    role=role,
+                    phone=phone
+                    )
+
+    db.session.add(user_new)
+    db.session.commit()
+    return f'Пользователь {first_name} {last_name} добавлен'
+
 
 
 if __name__ == "__main__":
