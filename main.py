@@ -44,6 +44,7 @@ class Order(db.Model):
     executor_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
 
+# todo удалить
 db.drop_all()
 db.create_all()
 
@@ -173,7 +174,7 @@ def get_chose_order(id):
     return jsonify(order_spec)
 
 
-@app.route('/orders', methods=["POST"])
+@app.route('/users', methods=["POST"])
 def add_user():
     """Создаем пользователя"""
     first_name = request.args['first_name']
@@ -195,6 +196,99 @@ def add_user():
     db.session.commit()
     return f'Пользователь {first_name} {last_name} добавлен'
 
+
+@app.route('/users/<int:id>', methods=["PUT"])
+def update_user(id):
+    """Обновляем пользователя"""
+    user = User.query.get(id)
+
+    first_name = request.args['first_name']
+    last_name = request.args['last_name']
+    age = request.args['age']
+    email = request.args['email']
+    role = request.args['role']
+    phone = request.args['phone']
+
+    user.firs_name = first_name
+    user.last_name = last_name
+    user.age = age
+    user.email = email
+    user.role = role
+    user.phone = phone
+
+    db.session.add(user)
+    db.session.commit()
+    return f'Пользователь {id} обновлен на {first_name} {last_name}'
+
+
+@app.route('/users/<int:id>', methods=["DELETE"])
+def delete_user(id):
+    """Удаляем пользователя"""
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+    return f' Пользователь {id} удален'
+
+
+@app.route('/order', methods=["POST"])
+def add_order():
+    """Создаем заказ"""
+    name = request.args['name']
+    description = request.args['description']
+    start_date = request.args['start_date']
+    end_date = request.args['end_date']
+    address = request.args['address']
+    price = request.args['price']
+    customer_id = request.args['customer_id']
+    executor_id = request.args['executor_id']
+
+    order_new = User(name=name,
+                     description=description,
+                     start_date=start_date,
+                     end_date=end_date,
+                     address=address,
+                     price=price,
+                     customer_id=customer_id,
+                     executor_id=executor_id
+                     )
+
+    db.session.add(order_new)
+    db.session.commit()
+    return f'Заказ {name} добавлен'
+
+
+# todo делаем отсюда
+@app.route('/users/<int:id>', methods=["PUT"])
+def update_user(id):
+    """Обновляем пользователя"""
+    user = User.query.get(id)
+
+    first_name = request.args['first_name']
+    last_name = request.args['last_name']
+    age = request.args['age']
+    email = request.args['email']
+    role = request.args['role']
+    phone = request.args['phone']
+
+    user.firs_name = first_name
+    user.last_name = last_name
+    user.age = age
+    user.email = email
+    user.role = role
+    user.phone = phone
+
+    db.session.add(user)
+    db.session.commit()
+    return f'Пользователь {id} обновлен на {first_name} {last_name}'
+
+
+@app.route('/users/<int:id>', methods=["DELETE"])
+def delete_user(id):
+    """Удаляем пользователя"""
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+    return f' Пользователь {id} удален'
 
 
 if __name__ == "__main__":
