@@ -242,53 +242,116 @@ def add_order():
     customer_id = request.args['customer_id']
     executor_id = request.args['executor_id']
 
-    order_new = User(name=name,
-                     description=description,
-                     start_date=start_date,
-                     end_date=end_date,
-                     address=address,
-                     price=price,
-                     customer_id=customer_id,
-                     executor_id=executor_id
-                     )
+    order_new = Order(name=name,
+                      description=description,
+                      start_date=start_date,
+                      end_date=end_date,
+                      address=address,
+                      price=price,
+                      customer_id=customer_id,
+                      executor_id=executor_id
+                      )
 
     db.session.add(order_new)
     db.session.commit()
     return f'Заказ {name} добавлен'
 
 
-# todo делаем отсюда
-@app.route('/users/<int:id>', methods=["PUT"])
-def update_user(id):
-    """Обновляем пользователя"""
-    user = User.query.get(id)
+@app.route('/order/<int:id>', methods=["PUT"])
+def update_order(id):
+    """Обновляем заказ"""
+    order = Order.query.get(id)
 
-    first_name = request.args['first_name']
-    last_name = request.args['last_name']
-    age = request.args['age']
-    email = request.args['email']
-    role = request.args['role']
-    phone = request.args['phone']
+    name = request.args['name']
+    description = request.args['description']
+    start_date = request.args['start_date']
+    end_date = request.args['end_date']
+    address = request.args['address']
+    price = request.args['price']
+    customer_id = request.args['customer_id']
+    executor_id = request.args['executor_id']
 
-    user.firs_name = first_name
-    user.last_name = last_name
-    user.age = age
-    user.email = email
-    user.role = role
-    user.phone = phone
+    order.name = name
+    order.description = description
+    order.start_date = start_date
+    order.end_date = end_date
+    order.address = address
+    order.price = price
+    order.customer_id = customer_id
+    order.executor_id = executor_id
 
-    db.session.add(user)
+    db.session.add(order)
     db.session.commit()
-    return f'Пользователь {id} обновлен на {first_name} {last_name}'
+    return f'Заказ {id} обновлен на {name}'
 
 
-@app.route('/users/<int:id>', methods=["DELETE"])
-def delete_user(id):
-    """Удаляем пользователя"""
-    user = User.query.get(id)
-    db.session.delete(user)
+@app.route('/order/<int:id>', methods=["DELETE"])
+def delete_order(id):
+    """Удаляем заказ"""
+    order = Order.query.get(id)
+    db.session.delete(order)
     db.session.commit()
-    return f' Пользователь {id} удален'
+    return f' Заказ {id} удален'
+
+
+# todo делаем отсюда и проверяем
+@app.route('/order', methods=["POST"])
+def add_order():
+    """Создаем offer"""
+    name = request.args['name']
+    description = request.args['description']
+    start_date = request.args['start_date']
+
+    order_new = Order(name=name,
+                      description=description,
+                      start_date=start_date,
+                      end_date=end_date,
+                      address=address,
+                      price=price,
+                      customer_id=customer_id,
+                      executor_id=executor_id
+                      )
+
+    db.session.add(order_new)
+    db.session.commit()
+    return f'Заказ {name} добавлен'
+
+
+@app.route('/order/<int:id>', methods=["PUT"])
+def update_order(id):
+    """Обновляем заказ"""
+    order = Order.query.get(id)
+
+    name = request.args['name']
+    description = request.args['description']
+    start_date = request.args['start_date']
+    end_date = request.args['end_date']
+    address = request.args['address']
+    price = request.args['price']
+    customer_id = request.args['customer_id']
+    executor_id = request.args['executor_id']
+
+    order.name = name
+    order.description = description
+    order.start_date = start_date
+    order.end_date = end_date
+    order.address = address
+    order.price = price
+    order.customer_id = customer_id
+    order.executor_id = executor_id
+
+    db.session.add(order)
+    db.session.commit()
+    return f'Заказ {id} обновлен на {name}'
+
+
+@app.route('/order/<int:id>', methods=["DELETE"])
+def delete_order(id):
+    """Удаляем заказ"""
+    order = Order.query.get(id)
+    db.session.delete(order)
+    db.session.commit()
+    return f' Заказ {id} удален'
 
 
 if __name__ == "__main__":
