@@ -44,7 +44,6 @@ class Order(db.Model):
     executor_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
 
-# todo удалить
 db.drop_all()
 db.create_all()
 
@@ -294,64 +293,42 @@ def delete_order(id):
     return f' Заказ {id} удален'
 
 
-# todo делаем отсюда и проверяем
-@app.route('/order', methods=["POST"])
-def add_order():
+@app.route('/offer', methods=["POST"])
+def add_offer():
     """Создаем offer"""
-    name = request.args['name']
-    description = request.args['description']
-    start_date = request.args['start_date']
-
-    order_new = Order(name=name,
-                      description=description,
-                      start_date=start_date,
-                      end_date=end_date,
-                      address=address,
-                      price=price,
-                      customer_id=customer_id,
-                      executor_id=executor_id
-                      )
-
-    db.session.add(order_new)
-    db.session.commit()
-    return f'Заказ {name} добавлен'
-
-
-@app.route('/order/<int:id>', methods=["PUT"])
-def update_order(id):
-    """Обновляем заказ"""
-    order = Order.query.get(id)
-
-    name = request.args['name']
-    description = request.args['description']
-    start_date = request.args['start_date']
-    end_date = request.args['end_date']
-    address = request.args['address']
-    price = request.args['price']
-    customer_id = request.args['customer_id']
+    order_id = request.args['order_id']
     executor_id = request.args['executor_id']
 
-    order.name = name
-    order.description = description
-    order.start_date = start_date
-    order.end_date = end_date
-    order.address = address
-    order.price = price
-    order.customer_id = customer_id
-    order.executor_id = executor_id
+    offer_new = Offer(order_id=order_id, executor_id=executor_id)
 
-    db.session.add(order)
+    db.session.add(offer_new)
     db.session.commit()
-    return f'Заказ {id} обновлен на {name}'
+    return f'offer для заказа {order_id} добавлен'
 
 
-@app.route('/order/<int:id>', methods=["DELETE"])
-def delete_order(id):
-    """Удаляем заказ"""
-    order = Order.query.get(id)
-    db.session.delete(order)
+@app.route('/offer/<int:id>', methods=["PUT"])
+def update_offer(id):
+    """Обновляем offer"""
+    offer = Offer.query.get(id)
+
+    order_id = request.args['order_id']
+    executor_id = request.args['executor_id']
+
+    offer.order_id = order_id
+    offer.executor_id = executor_id
+
+    db.session.add(offer)
     db.session.commit()
-    return f' Заказ {id} удален'
+    return f'Offer {id} обновлен'
+
+
+@app.route('/offer/<int:id>', methods=["DELETE"])
+def delete_offer(id):
+    """Удаляем offer"""
+    offer = Offer.query.get(id)
+    db.session.delete(offer)
+    db.session.commit()
+    return f' Offer {id} удален'
 
 
 if __name__ == "__main__":
